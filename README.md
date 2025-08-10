@@ -23,14 +23,6 @@ Origem dos dados: `https://diocese-sjc.org.br/wp-content/plugins/hmissa/actions.
 
 Obs.: por padrão o frontend chama a API relativa (`/api/...`). Se precisar, use `VITE_API_BASE` para apontar outra origem.
 
-## Deploy na Vercel (via GitHub)
-- Conecte o repositório no painel da Vercel (Production Branch: `main`).
-- A cada push na branch configurada, um deploy será criado automaticamente.
-- Para forçar um redeploy: use “Redeploy → Use latest code” no painel, ou faça um commit vazio:
-  ```bash
-  git commit --allow-empty -m "trigger vercel deploy" && git push
-  ```
-
 ## Avisos
 - Projeto não-oficial, sem vínculo com a Diocese.
 - As funções serverless fazem scraping do HTML público do site da Diocese e retornam JSON para o frontend.
