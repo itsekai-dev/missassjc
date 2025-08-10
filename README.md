@@ -3,9 +3,8 @@
 Frontend moderno (React + Vite + TypeScript) e funções serverless (Vercel) para melhorar a busca por horários de missas da Diocese de São José dos Campos.
 
 ## Sobre
-- Janela de +1h a partir do horário selecionado (passo 15 min)
-- Fallback automático: se não houver missas na próxima hora, buscamos o próximo horário disponível do dia (passo 15 min, limite de 4h)
-- UI em PT-BR e seletor de horário com `input[type="time"]` (permite digitar ou selecionar)
+- Busca Missas em uma Janela de +1h a partir do horário selecionado ao invés de apenas no horário especificado
+- Fallback automático: se não houver missas na próxima hora, buscamos o próximo horário disponível do dia (limite de 4h)
 
 ## Estrutura
 - `src/`: aplicativo React (Vite)
