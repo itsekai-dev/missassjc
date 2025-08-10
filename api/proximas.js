@@ -14,7 +14,16 @@ async function fetchItemsForDayTime(dia, hhmm){ const p=new URLSearchParams(); p
 export default async function handler(req,res){
   setCors(res); if (req.method==='OPTIONS') return res.status(200).end(); if (req.method!=='GET') return res.status(405).json({error:'Método não permitido'})
   try{
-    const now=new Date(); const diasPt=['Domingo','Segunda','Terca','Quarta','Quinta','Sexta','Sabado']; const dia=diasPt[now.getDay()]; const hh=String(now.getHours()).padStart(2,'0'); const mm=String(now.getMinutes()).padStart(2,'0'); const horarioInicio=`${hh}:${mm}`
+    // Use timezone America/Sao_Paulo para evitar drift de fuso no ambiente da Vercel
+    const fmt = new Intl.DateTimeFormat('pt-BR', { timeZone: 'America/Sao_Paulo', hour12: false, weekday: 'long', hour: '2-digit', minute: '2-digit' })
+    const parts = fmt.formatToParts(new Date())
+    const map = Object.fromEntries(parts.map(p => [p.type, p.value]))
+    const weekday = (map.weekday || '').toLowerCase()
+    const diasPt=['domingo','segunda-feira','terça-feira','quarta-feira','quinta-feira','sexta-feira','sábado']
+    const diasApi=['Domingo','Segunda','Terca','Quarta','Quinta','Sexta','Sabado']
+    const idx = diasPt.findIndex(d => weekday.startsWith(d))
+    const dia = idx >= 0 ? diasApi[idx] : 'Domingo'
+    const horarioInicio = `${map.hour || '00'}:${map.minute || '00'}`
     const slots=generateSlots(horarioInicio,60,15); const aggregated=[]; const seen=new Set();
     for(const t of slots){ const list=await fetchItemsForDayTime(dia,t); for(const it of list){ const key=`${it.nome}||${it.bairro}||${it.cidade}||${it.inicio}`; if(!seen.has(key)){ seen.add(key); aggregated.push(it) } } }
     let resultados=aggregated

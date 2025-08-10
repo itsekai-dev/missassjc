@@ -44,19 +44,9 @@ export default function App() {
   }
 
   useEffect(() => {
-    (async () => {
-      setCarregando(true)
-      try {
-        const resp = await fetch(`${API_BASE}/api/proximas`)
-        const data = await resp.json()
-        if (data && data.ok) {
-          const diaPt: Record<string,string> = {Domingo:'Domingo',Segunda:'Segunda',Terca:'Terça',Quarta:'Quarta',Quinta:'Quinta',Sexta:'Sexta',Sabado:'Sábado'}
-          setCtx(`${diaPt[data.dia] || data.dia} a partir de ${data.horarioBase}`)
-          setResultados(data.resultados)
-        }
-      } catch(e){ console.error(e) }
-      finally { setCarregando(false) }
-    })()
+    // Carrega com base no horário local do usuário, para evitar problemas de fuso no servidor
+    buscarJanela()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (
