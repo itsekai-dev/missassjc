@@ -1,21 +1,36 @@
-# React + TypeScript + Vite
+# MissasSJC (site não-oficial)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Frontend moderno (React + Vite + TypeScript) e funções serverless (Vercel) para melhorar a busca por horários de missas da Diocese de São José dos Campos.
 
-While this project uses React, Vite supports many popular JS frameworks. [See all the supported frameworks](https://vitejs.dev/guide/#scaffolding-your-first-vite-project).
+## Sobre
+- Janela de +1h a partir do horário selecionado (passo 15 min)
+- Fallback automático: se não houver missas na próxima hora, buscamos o próximo horário disponível do dia (passo 15 min, limite de 4h)
+- UI em PT-BR e seletor de horário com `input[type="time"]` (permite digitar ou selecionar)
 
-## Deploy Your Own
+## Estrutura
+- `src/`: aplicativo React (Vite)
+- `api/`: funções serverless Vercel
+  - `POST /api/buscar-janela` → body `{ dia: 'Domingo|Segunda|...|Sabado', horarioInicio: 'HH:MM' }`
+  - `GET /api/proximas` → próximas missas considerando data/hora atual
+- `vercel.json`: rotas e headers CORS para `/api/*`
 
-Deploy your own Vite project with Vercel.
+Origem dos dados: `https://diocese-sjc.org.br/wp-content/plugins/hmissa/actions.php` (HTML parseado via `cheerio`).
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/vercel/examples/tree/main/framework-boilerplates/vite-react&template=vite-react)
+## Rodar localmente
+1) Instalar deps: `npm i`
+2) Dev server: `npm run dev`
+3) Abrir: `http://localhost:5173`
 
-_Live Example: https://vite-react-example.vercel.app_
+Obs.: por padrão o frontend chama a API relativa (`/api/...`). Se precisar, use `VITE_API_BASE` para apontar outra origem.
 
-### Deploying From Your Terminal
+## Deploy na Vercel (via GitHub)
+- Conecte o repositório no painel da Vercel (Production Branch: `main`).
+- A cada push na branch configurada, um deploy será criado automaticamente.
+- Para forçar um redeploy: use “Redeploy → Use latest code” no painel, ou faça um commit vazio:
+  ```bash
+  git commit --allow-empty -m "trigger vercel deploy" && git push
+  ```
 
-You can deploy your new Vite project with a single command from your terminal using [Vercel CLI](https://vercel.com/download):
-
-```shell
-$ vercel
-```
+## Avisos
+- Projeto não-oficial, sem vínculo com a Diocese.
+- As funções serverless fazem scraping do HTML público do site da Diocese e retornam JSON para o frontend.
