@@ -3,10 +3,6 @@
   "builds": [
     { "src": "api/*.js", "use": "@vercel/node" }
   ],
-  "routes": [
-    { "src": "/api/buscar-janela", "dest": "/api/buscar-janela.js" },
-    { "src": "/api/proximas", "dest": "/api/proximas.js" }
-  ],
   "headers": [
     {
       "source": "/api/(.*)",
