@@ -1,5 +1,5 @@
 import axios from 'axios'
-import cheerio from 'cheerio'
+import { load as cheerioLoad } from 'cheerio'
 
 const REMOTE_ENDPOINT = 'https://diocese-sjc.org.br/wp-content/plugins/hmissa/actions.php'
 
@@ -10,7 +10,7 @@ function setCors(res) {
 }
 
 function parseHtmlTable(html) {
-  const $ = cheerio.load(html)
+  const $ = cheerioLoad(html)
   const items = []
   $('table.resultados tbody tr').each((_, el) => {
     const tds = $(el).find('td')
@@ -43,7 +43,11 @@ export default async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end()
   if (req.method !== 'POST') return res.status(405).json({ error: 'Método não permitido' })
   try {
-    const { dia, horarioInicio } = req.body || {}
+    let body = req.body
+    if (typeof body === 'string') {
+      try { body = JSON.parse(body) } catch {}
+    }
+    const { dia, horarioInicio } = body || {}
     if (!dia) return res.status(400).json({ error: 'Dia é obrigatório.' })
     if (!horarioInicio) return res.status(400).json({ error: 'Horário é obrigatório (HH:MM).' })
     const slots = generateSlots(horarioInicio, 60, 15)
@@ -63,7 +67,7 @@ export default async function handler(req, res) {
     }
     return res.status(200).json({ ok: true, dia, horarioBase: horarioInicio, resultados })
   } catch (err) {
-    return res.status(500).json({ error: 'Falha ao processar a busca com janela.', detail: String(err) })
+    return res.status(500).json({ error: 'Falha ao processar a busca com janela.', detail: err?.message || String(err) })
   }
 }
 
