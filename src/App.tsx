@@ -98,7 +98,16 @@ export default function App() {
               <tbody>
                 {resultados.map((it, i) => (
                   <tr key={`${it.nome}-${it.inicio}-${i}`}>
-                    <td>{it.nome}</td>
+                    <td>
+                      <div style={{display:'flex',flexDirection:'column',gap:4}}>
+                        <strong>{it.nome}</strong>
+                        {it.address && (
+                          <a href={it.mapsUrl} target="_blank" rel="noreferrer" className="muted" style={{textDecoration:'underline'}}>
+                            {it.address}
+                          </a>
+                        )}
+                      </div>
+                    </td>
                     <td>{it.bairro}</td>
                     <td>{it.cidade}</td>
                     <td><strong>{it.inicio}</strong></td>

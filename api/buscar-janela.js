@@ -15,11 +15,17 @@ function parseHtmlTable(html) {
   $('table.resultados tbody tr').each((_, el) => {
     const tds = $(el).find('td')
     if (tds.length >= 4) {
-      const nome = $(tds[0]).text().trim().replace(/\s+/g, ' ')
+      // Nome da Unidade: apenas o texto do <a>
+      const nome = $(tds[0]).find('a').first().text().trim().replace(/\s+/g, ' ')
+      // Endereço: primeiro trecho de <span class="obs"> até o <br />
+      const obsHtml = $(tds[0]).find('span.obs').first().html() || ''
+      const addressFragment = obsHtml.split('<br')[0] || ''
+      const address = cheerioLoad(`<div>${addressFragment}</div>`)('div').text().trim().replace(/\s+/g, ' ')
+      const mapsUrl = address ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}` : ''
       const bairro = $(tds[1]).text().trim().replace(/\s+/g, ' ')
       const cidade = $(tds[2]).text().trim().replace(/\s+/g, ' ')
       const inicio = $(tds[3]).text().trim()
-      items.push({ nome, bairro, cidade, inicio })
+      items.push({ nome, bairro, cidade, inicio, address, mapsUrl })
     }
   })
   return items
