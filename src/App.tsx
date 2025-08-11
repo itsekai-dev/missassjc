@@ -12,7 +12,7 @@ function nowDefaults(){
   return { dia: diasBR[now.getDay()], hora: `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}` }
 }
 
-type Resultado = { nome: string; bairro: string; cidade: string; inicio: string }
+type Resultado = { nome: string; bairro: string; cidade: string; inicio: string; address?: string; mapsUrl?: string }
 
 export default function App() {
   const defaults = useMemo(nowDefaults, [])
