@@ -72,7 +72,7 @@ export default function App() {
           </div>
         </div>
         <div className="row" style={{marginTop:12}}>
-          <button onClick={buscarJanela} disabled={carregando}>Buscar</button>
+          <button onClick={buscarJanela} disabled={carregando} style={{ color: '#0e639c' }}>Buscar</button>
           {carregando && <span className="muted">Buscando…</span>}
         </div>
       </section>
