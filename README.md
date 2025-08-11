@@ -22,6 +22,11 @@ Origem dos dados: `https://diocese-sjc.org.br/wp-content/plugins/hmissa/actions.
 
 Obs.: por padrão o frontend chama a API relativa (`/api/...`). Se precisar, use `VITE_API_BASE` para apontar outra origem.
 
+Para o mapa do Google, crie `.env` com:
+```
+VITE_GOOGLE_MAPS_API_KEY=SEU_API_KEY
+```
+
 ## Avisos
 - Projeto não-oficial, sem vínculo com a Diocese.
 - As funções serverless fazem scraping do HTML público do site da Diocese e retornam JSON para o frontend.
