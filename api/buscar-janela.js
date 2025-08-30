@@ -33,7 +33,13 @@ function parseHtmlTable(html) {
 
 function toMinutes(hhmm) { const [hh, mm] = hhmm.split(':').map(Number); return hh * 60 + mm }
 function fromMinutes(total) { const hh = String(Math.floor(total / 60)).padStart(2, '0'); const mm = String(total % 60).padStart(2, '0'); return `${hh}:${mm}` }
-function generateSlots(hhmmStart, span, step) { const s = toMinutes(hhmmStart); const e = Math.min(s + span, 23*60+59); const xs=[]; for(let t=s;t<=e;t+=step) xs.push(fromMinutes(t)); return xs }
+function alignUpToQuarter(mins){ const r = mins % 15; return r===0 ? mins : mins + (15 - r) }
+function generateSlots(hhmmStart, span, step) {
+  const raw = toMinutes(hhmmStart)
+  const start = alignUpToQuarter(raw)
+  const end = Math.min(raw + span, 23*60+59)
+  const xs=[]; for(let t=start;t<=end;t+=step) xs.push(fromMinutes(t)); return xs
+}
 function normalizeTimeLabel(label){ return /^\d{2}h\d{2}$/.test(label) ? label.replace('h', ':') : label }
 
 async function fetchItemsForDayTime(dia, hhmm) {
@@ -66,7 +72,7 @@ export default async function handler(req, res) {
     let resultados = aggregated
     if (resultados.length === 0) {
       let found = []
-      const start = toMinutes(horarioInicio) + 15
+      const start = alignUpToQuarter(toMinutes(horarioInicio)+1)
       const max = Math.min(start + 15*16, 23*60+45)
       for (let m=start;m<=max;m+=15){ const t=fromMinutes(m); const next = await fetchItemsForDayTime(dia, t); if (next.length>0){ found = next; break } }
       resultados = found
